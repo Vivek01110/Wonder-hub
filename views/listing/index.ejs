@@ -1,0 +1,104 @@
+<% layout('./layouts/boilerplate') %>
+
+    <div class="container mt-4">
+        <!-- <a href="http://localhost:8080/listing/create">
+            <button>Create Listing</button>
+        </a> -->
+            
+        
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+            <% for(let list of listing){ %>
+                <div class="card col"> 
+                    <!-- width card : 18th rem -->
+                    
+                    <a class = "showlist" href = "http://localhost:8080/listing/<%=list._id %>">
+                        <div class="card-img-overlay"></div>
+                        <img 
+                        src="<%=list.image.url%>" class="card-img-top" 
+                        style = "height:15rem;" alt="listingimg">
+                        
+                        <div class="card-body">
+                            <p class="card-title"><%=list.title %></p>
+                            <p class="card-price">
+                            <%= list.price ? list.price.toLocaleString("en-IN") : "N/A" %> &#8377; / night 
+                            </p>
+                    </a>
+                       
+                        </div>
+                   
+                </div>
+            <%}%>
+        </div>
+
+
+
+
+
+
+<!-- <% //layout('./layouts/boilerplate') %>
+   
+   <style>
+    .container{
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .listing{
+        width:75%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        
+    }
+
+    .list{    
+        background-color:rgba(239, 238, 238, 0.497);
+        box-shadow: 1px 1px 5px rgb(187, 187, 187);
+       
+    }
+
+    .list img{
+        max-height:200px;
+        width:100%;   
+    }
+    .cardlink{
+        text-decoration: none;
+        color: rgb(66, 65, 65);
+        text-align: center;
+        padding: .05em;
+
+    }
+</style>
+
+    <div class="container">
+        <a href="http://localhost:8080/listing/create">
+            <button>Create Listing</button>
+        </a>
+            
+        
+        <div class="listing">
+             <% //for(let list of listing){ %>
+                 <div class = "list">
+                    <a href = "http://localhost:8080/listing/<%=//list._id %>">
+                        <img src="<%=//list.image.url%>" alt="img">
+                        <a class = "cardlink"href = "http://localhost:8080/listing/<%=//list._id %>">
+                            <h4><%=//list.title %></h4>
+                       
+                         <p><b>Price : </b><%= //list.price.toLocaleString("en-IN")%> &#8377;</p>
+                         </a>
+
+                        <a href="http://localhost:8080/listing/<%=//list._id %>/edit"><button>Edit</button></a>
+
+                        <form  method = "post" action="/listing/<%=//list._id %>?_method=Delete"><button>Delete</button></form>
+                        <p><%=// list.description %></p> -->
+                        
+                        <!-- <p>Location : <%= //list.location%></p>
+                        <p>Country : <%= //list.country%></p> -->
+<!--                    
+                 </div>
+             <%//}%>
+              
+        </div>
+    </div>
+ --> 

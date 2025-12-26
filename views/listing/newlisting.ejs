@@ -1,0 +1,99 @@
+<% layout('/layouts/boilerplate') %>
+
+<body>
+   <div class="rows">
+        <h3 class = "offset-2">Add New Listing</h3>
+        <form class = 'col-8 offset-2 needs-validation'method = "POST" action="/listing" novalidate > 
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" name = "title" placeholder = "Enter the title" class="form-control"  required>
+                <!-- novalidate to override browser required mssg to bootstrap -->
+                 <div class="valid-feedback">Title looks good.</div>
+            </div>
+            <div class = "mb-3">
+                <label for="description" class="form-label">description</label>
+                <textarea rows = "5" cols="10" name="description"        id="description" placeholder="write listing's description" class="form-control"  required></textarea>
+                <div class="invalid-feedback">Please enter the description.</div>
+            </div>
+            <div class="row">
+                <div class=" mb-3 col-md-4">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="text" name = "price" placeholder = "Enter the price" class="form-control"  required>
+                    <div class="invalid-feedback">Price is required.</div>
+                </div>
+
+                <div class=" mb-3 col-md-8">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" name = "location" placeholder = "Enter the location" class="form-control"  required>
+                    <div class="invalid-feedback">Location is required !</div>
+                </div>
+            </div>
+            
+            <div class=" mb-3">
+                <label for="country" class="form-label">Country</label>
+                <input type="text" name = "country" placeholder = "Enter the country" class="form-control"  >
+                <div class="invalid-feedback">Country is required.</div>
+            </div>
+            <div class=" mb-3">
+                <label for="imageURl" class="form-label">Image URL</label>
+                <input type="text" name = "image" placeholder="Enter your image URL" class="form-control" > 
+                <div class="invalid-feedback">Please upload an image.</div>
+            </div>
+
+            <button class = "btn btn-danger mb-5">Submit</button>
+        </form>
+
+    </div>
+
+    
+
+</body>
+
+
+<!-- <style>
+    .container{
+        height:100vh;
+        width:100vw;
+         border:1px solid black;
+         display: flex;
+         justify-content: center;
+         flex-direction: column;
+         align-items: center;
+
+    }
+
+    form{
+        height: 60%;
+        width: 50%;
+        border:1px solid black;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 2%;
+
+
+    }
+
+</style>
+<body>
+    
+    <div class="container">
+        <h1>Create New Listing</h1>
+        <form method = "POST" action="/listing"> 
+            <input type="text" name = "title" placeholder = "Enter the title">
+           <textarea rows = "5" cols="10" name="description"        id="description" placeholder="write listing's description"></textarea>
+
+            <input type="text" name = "price" placeholder = "Enter the price">
+            <input type="text" name = "location" placeholder = "Enter the location">
+            <input type="text" name = "country" placeholder = "Enter the country">
+            <input type="text" name = "image" placeholder="Enter your image URL"> 
+            <p>OR</p>    
+            <input type="file" placeholder="uplaod image"> 
+
+            <button>Submit</button>
+        </form>
+
+    </div>
+    
+</body>
+</html> -->

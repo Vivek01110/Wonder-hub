@@ -1,0 +1,74 @@
+<% layout('/layouts/boilerplate') %>
+
+<div class="mb-5 m-3">
+    <div class="col-10">
+        <div class="card mb-3 col-9 offset-3">
+            <img src="<%= card.image.url%>" alt="img" class="card-img-top show-image mb-2">
+            <div class="card-body">
+                 <h5 class="card-title"> <b><%= card.title %></b></h5>
+                <p class="card-text"><%= card.description %><p>
+                <p class="card-text">&#8377; <%= (card.price) ? card.price.toLocaleString("en-IN") : "N/A"%>/night</p> 
+                <p class="card-text mb-1"><%= card.location%></p>
+                <p class="card-text"><%= card.country%></p>
+
+                <a href="/listing/<%=card._id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+                
+                <form method="post" action="/listing/<%=card._id %>?_method=DELETE" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- <style>
+        body{
+            
+            width:100vw;
+            display: flex;
+            justify-content: center;
+           
+        }
+        .container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 1px 1px 5px rgb(187, 187, 187); 
+            width: 50%;   
+            height:100%;
+        }
+
+        .container img{
+            width:100%;  
+        }
+        
+        .description{
+            width: 75%;
+            text-align: center;
+            font-style: italic;
+        }
+        .container h1{
+            text-align: center;
+            margin:5%;
+        }
+        
+    </style>
+
+    <div class="container">
+        <h1> <%= card.title %></h1>
+        <img src="<%= card.image.url%>" alt="img">
+
+        <p class = "description"><%= card.description %></p>
+        <p><b>Location : </b><%= card.location%></p>
+        <p><b>Price : </b><%= card.price.toLocaleString("en-IN")%> &#8377;</p>
+        <p><b>Country : </b><%= card.country%></p>
+
+           <a href="http://localhost:8080/listing/<%=card._id %>/edit" class="btn btn-primary btn-sm">Edit</a>   
+    </div>
+
+ -->
+
