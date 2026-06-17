@@ -1,5 +1,9 @@
+const { ref } = require("joi");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Review = require('./reviews');
+
+
 
 const listingSchema = new Schema({
     title : {
@@ -29,8 +33,22 @@ const listingSchema = new Schema({
 
     price: Number,
     location:String,
-    country : String
+    country : String,
+    reviews : [
+        {
+            type : Schema.Types.ObjectId,
+            ref  : 'Review'
+
+        }
+    ]
 });
+// it will delete reviews as well whenever any listing will be deleted using findByIdAndDelete
+listingSchema.post('findOneAndDelete' , async (listing) =>{
+    if(listing){
+        await Review.deleteMany({_id : {$in : listing.reviews}});
+    }
+    
+})
 
 const Listing = mongoose.model("Listing" , listingSchema);
 
