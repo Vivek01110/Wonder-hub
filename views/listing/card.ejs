@@ -66,11 +66,10 @@
                     
                         <form 
                             method = 'post'
-                            action="/listing/<%= card._id %>/review/<%=rev._id%>?_method=DELETE" 
+                            action="/listing/<%= card._id %>/reviews/<%=rev._id%>?_method=DELETE" 
                             class="mt-auto">
                             <button class="btn btn-danger btn-sm">Delete</button>
                         </form>
-                    
                     </div>
                 
                 <% } %>
