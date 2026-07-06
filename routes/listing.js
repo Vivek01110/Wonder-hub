@@ -1,21 +1,12 @@
 const express = require('express');
 const router = express.Router({mergeParams:true}); 
 const wrapAsync = require('../utils/wrapAsync');
-const {listingSchema} = require('../schema'); 
 const ExpressError = require('../utils/ExpressError');
 const Listing = require('../models/listing');
-const {isLoggedIn} = require('../middleware.js');
+const {isLoggedIn, isOwner, validateListing} = require('../middleware.js');
+const { populate } = require('../models/reviews.js');
 
-const validateListing = (req ,res , next) =>{
-    const {error} =  listingSchema.validate(req.body); // it will validate req body with the schema
-    console.log(error);
-    if(error){
-       throw new ExpressError(400 , result.error);
-    }
-    else{
-        next();
-    }
-}
+
 
 // to get all listing
 router.get('/' , wrapAsync(async (req , res) =>{
@@ -32,7 +23,10 @@ router.get('/create' , isLoggedIn,(req, res) =>{
 });
 
 // <---- Edit ---->
-router.get('/:id/edit' ,isLoggedIn, wrapAsync(async (req , res) =>{ // write it first befor post
+router.get('/:id/edit' ,
+    isLoggedIn,
+    isOwner,
+     wrapAsync(async (req , res) =>{ // write it first befor post
     
     const {id} = req.params;
 
@@ -50,13 +44,19 @@ router.get('/:id/edit' ,isLoggedIn, wrapAsync(async (req , res) =>{ // write it 
 
 
 // to recieve the patch request form the edit form of any listing
-router.patch('/:id',isLoggedIn,validateListing, wrapAsync(async (req , res, next) =>{
+router.patch('/:id',
+    isLoggedIn,
+    validateListing,
+    isOwner,
+     wrapAsync(async (req , res, next) =>{
     const { id } = req.params; 
     // you were destructuring the route param as const {_id} = req.params; but the route is defined as /listing/:id so req.params contains { id: '...' } — not _id.
 
     // if(!req.body.listing){ // this listing will not be in the db becasuse it is sent after editing it
     //     next(new ExpressError(400 , "send a valid request"));
     // }
+     
+    
     const {title , description , price , location , country , image} = req.body;
     
     const list = await Listing.findByIdAndUpdate(id, 
@@ -77,14 +77,23 @@ router.patch('/:id',isLoggedIn,validateListing, wrapAsync(async (req , res, next
     // const list = await Listing.findByIdAndUpdate(id , ...req.body.listing)
 
     console.log(list);
-    res.redirect("/listing"); // write the route here in redirect
+    res.redirect(`/listing/${id}`); // write the route here in redirect
 }));
 
 
 //  <---- detail listing ---->
 router.get('/:id' , wrapAsync(async (req , res) =>{
     let {id : cardId} = req.params;
-    const card = await Listing.findById(cardId).populate('reviews');
+    const card = await Listing.findById(cardId)
+    .populate({
+        path : "reviews",
+        populate : {
+            path : "author"
+        },
+    })
+    .populate('owner');
+
+    // console.log(card);
 
     if(!card){
         req.flash("error", "listing does not exist!");
@@ -99,7 +108,10 @@ router.get('/:id' , wrapAsync(async (req , res) =>{
 
 
 // <--- New Listing ---->
-router.post('/', validateListing , isLoggedIn, wrapAsync(async (req , res, next) =>{
+router.post('/', 
+    validateListing ,
+     isLoggedIn,
+      wrapAsync(async (req , res, next) =>{
     // just print req.body and match the values
    const result =  listingSchema.validate(req.body); // it will validate req body with the schema
    console.log(result.error);
@@ -122,7 +134,9 @@ router.post('/', validateListing , isLoggedIn, wrapAsync(async (req , res, next)
             image : {
                 filename:"listingsimage",
                 url:image
-            }
+            },
+            owner : req.user._id
+
         })
         .then((resp) =>{
             // console.log("INserted listing" , resp);
@@ -135,7 +149,10 @@ router.post('/', validateListing , isLoggedIn, wrapAsync(async (req , res, next)
 
 // <----Delete Listing --->
 
-router.delete('/:id' , isLoggedIn,wrapAsync(async (req , res) =>{
+router.delete('/:id' ,
+     isLoggedIn,
+     isOwner,
+     wrapAsync(async (req , res) =>{
     const { id } = req.params;
 
     const list = await Listing.findByIdAndDelete(id);

@@ -40,7 +40,11 @@ const listingSchema = new Schema({
             ref  : 'Review'
 
         }
-    ]
+    ],
+    owner : {
+        type: Schema.Types.ObjectId,
+        ref : "user"
+    },
 });
 // it will delete reviews as well whenever any listing will be deleted using findByIdAndDelete
 listingSchema.post('findOneAndDelete' , async (listing) =>{

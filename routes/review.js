@@ -2,24 +2,11 @@ const express = require('express');
 const router = express.Router({mergeParams:true}); // to access :id 
 const Listing = require('../models/listing');
 const Review = require('../models/reviews');
-const wrapAsync = require('../utils/wrapAsync');
-const ExpressError = require('../utils/ExpressError');
-const {reviewSchema} = require('../schema'); 
+const wrapAsync = require('../utils/wrapAsync'); 
+const {ValidateReview, isLoggedIn, isAutherReview} = require('../middleware.js');
 
 
-const ValidateReview = (req, res , next) =>{
-    const {error} = reviewSchema.validate(req.body);
-    console.log("review schema fields is not validated and wrong",error);
-
-    if(error){
-        throw new ExpressError(400, error);
-    }
-    else{
-        next();
-    }
-}
-
-router.post('/', ValidateReview,wrapAsync( async (req, res) =>{
+router.post('/', ValidateReview, isLoggedIn,wrapAsync( async (req, res) =>{
     const {id} = req.params;
     const {rating , comment} = req.body.review;
 
@@ -27,7 +14,8 @@ router.post('/', ValidateReview,wrapAsync( async (req, res) =>{
 
     const rev =  new Review({
         Comment:comment,
-        rating:rating
+        rating:rating,
+        author: req.user._id
     });
 
     let res1 = await rev.save();
@@ -41,15 +29,13 @@ router.post('/', ValidateReview,wrapAsync( async (req, res) =>{
     res.redirect(`/listing/${id}`);  
 }));
 
-router.delete('/:reviewId', wrapAsync(async(req, res) =>{
+router.delete('/:reviewId', isLoggedIn, isAutherReview, wrapAsync(async(req, res) =>{
     let {id , reviewId} = req.params;
 
-     await Review.findByIdAndDelete(reviewId);
-     await Listing.findByIdAndUpdate(id, {$pull : {reviews : reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    await Listing.findByIdAndUpdate(id, {$pull : {reviews : reviewId}});
     req.flash("success", "review is deleted !");
-     res.redirect(`/listing/${id}`);
-    
-
+    res.redirect(`/listing/${id}`);
 }));
 
 module.exports = router;
