@@ -21,6 +21,7 @@ app.engine('ejs', ejsMate); // for boilerplate
 app.use(express.static(path.join(__dirname, "/public"))); // for public folder
 
 const dbUrl = process.env.ATLASDB_URL;
+
 const listingsRouter = require('./routes/listing');
 const reviewsRouter = require('./routes/review');
 const userRouter = require("./routes/user");
@@ -86,6 +87,10 @@ main().then(() =>{
 async function main() {
     await mongoose.connect(dbUrl)
 }
+
+app.get('/', (req, res) => {
+    res.redirect('/listing');
+});
 
 app.use('/listing', listingsRouter);
 app.use('/listing/:id/reviews', reviewsRouter);
