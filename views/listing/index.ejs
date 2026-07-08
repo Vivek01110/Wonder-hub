@@ -1,12 +1,78 @@
 <% layout('./layouts/boilerplate') %>
-     
-    <div class="container mt-4">
-        <!-- <a href="http://localhost:8080/listing/create">
-            <button>Create Listing</button>
-        </a> -->
-        
-       
-        
+
+    <style>
+
+        #filters{
+            display: flex;
+            margin-top: 1rem;
+            margin-bottom: 1rem;   
+        }
+
+        .filter{
+            text-align: center;
+            margin-right:2rem;
+            opacity: .7;
+        }
+
+        .filter:hover{
+            opacity: 1;
+            cursor:pointer;
+        }
+        .filter p{
+            font-size: .9em;
+        }
+
+    </style>
+
+    <!-- Add diplay taxes button as well  -->
+    <div class="container mt-2">
+        <div id = 'filters'>
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-fire"></i></div>
+                <p>Trending</p>
+            </div>
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-bed"></i></div>
+                <p>Rooms</p>
+            </div>
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-mountain-city"></i></div>
+                <p>Mountain city</p>
+            </div>
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-person-hiking"></i></div>
+                <p>Hiking</p>
+            </div>
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-chess-rook"></i></div>
+                <p>Castles</p>
+            </div>     
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-person-swimming"></i></div>
+                <p>Pools</p>
+            </div>  
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-cow"></i></div>
+                <p>Farms</p>
+            </div> 
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-place-of-worship"></i></div>
+                <p>Temples</p>
+            </div> 
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-snowflake"></i></div>
+                <p>Arctic</p>
+            </div> 
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-kitchen-set"></i></div>
+                <p>Restaurants</p>
+            </div> 
+            <div class = 'filter'>
+                <div><i class="fa-solid fa-campground"></i></div>
+                <p>Camping</p>
+            </div> 
+        </div>
+
         <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
             <% for(let list of listing){ %>
                 <div class="card col"> 
@@ -30,6 +96,9 @@
         </div>
             <% } %>
     </div>
+
+
+
 
 
 

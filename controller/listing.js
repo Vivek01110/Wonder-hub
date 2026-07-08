@@ -11,13 +11,13 @@ module.exports.renderNewForm = (req, res) =>{
 }; 
 // post new listing
 module.exports.postNewListing = async (req , res, next) =>{
-   const result =  listingSchema.validate(req.body); // it will validate req body with the schema
-   console.log(result.error);
-   if(result.error){
-       throw new ExpressError(400 , result.error);
-   }
+    let imgurl = req.file.path;
+    let filename = req.file.filename;
 
-    const {title ,description ,price ,location,country,image} = req.body;
+    // console.log(filename ," ", imgurl);
+
+    const {title ,description ,price ,location,country} = req.body;
+    console.log(req.body);
         await Listing.insertOne(
             {
             title : title ,
@@ -26,13 +26,13 @@ module.exports.postNewListing = async (req , res, next) =>{
             location:location,
             country:country,
             image : {
-                filename:"listingsimage",
-                url:image
+                filename: filename,
+                url:imgurl
             },
             owner : req.user._id
         })
         .then((resp) =>{
-            // console.log("INserted listing" , resp);
+            console.log("INserted listing" , resp);
             req.flash("success", "New listing is succesfully Created !!");
             res.redirect('/listing');
         })     
@@ -56,26 +56,35 @@ module.exports.renderEditForm = async (req , res) =>{ // write it first befor po
 module.exports.postEdit = async (req , res, next) =>{
     const { id } = req.params; 
     // you were destructuring the route param as const {_id} = req.params; but the route is defined as /listing/:id so req.params contains { id: '...' } — not _id.
-  
-    const {title , description , price , location , country , image} = req.body;
+
     
-    const list = await Listing.findByIdAndUpdate(id, 
-        {
-            title:title,
-            description:description,
-            price:price,
-            location:location,
-            image:{
-               filename:"listingsimage",
-               url:image
-            }
-        },
-        {new:true} // list will store updated list , new is an option
-    );
+
+    const {title , description , price , location , country} = req.body;
+    console.log("reqBody is below");
+    console.log(req.body);
+
+    const updateData = {
+        title,
+        description,
+        price,
+        location,
+        country,
+    };
+
+    if(req.file){
+        updateData.image = {
+            filename: req.file.filename,
+            url: req.file.path,
+        };
+    }
+
+    const list = await Listing.findByIdAndUpdate(id, updateData, {new:true});
+
+    console.log("new listing");
+    console.log(list);
+    
     req.flash("success" , "listing is updated succesfulyy");
     // const list = await Listing.findByIdAndUpdate(id , ...req.body.listing)
-
-    console.log(list);
     res.redirect(`/listing/${id}`); // write the route here in redirect
 };
 

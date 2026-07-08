@@ -78,7 +78,11 @@
 <body>
     <div class="edit-container">
         <h3>Edit Listing </h3>
-        <form class = "needs-validation"  method="post" action="/listing/<%=card._id%>?_method=patch">
+        <form 
+        class = "needs-validation"
+        method="post"
+        action="/listing/<%=card._id%>?_method=patch"
+        enctype="multipart/form-data">
 
         <div class = "form_container">
             <img src="<%= card.image.url%>" alt="">
@@ -114,8 +118,11 @@
             </div>
 
             <div class="box">
-                <label for = "image">URL : </label>
-                <input type="text" name = "image" placeholder="Enter your image URL" value = "<%= card.image.url%>" required> 
+                <label for = "image">Upload new Image</label>
+                <input 
+                type="file"
+                name = "image"
+                class="form-control"> 
                 <!-- <div class="invalid-feedback">Please upload an image.</div> -->
             </div>
 

@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV != "production"){
+    require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const ejsMate = require('ejs-mate');
@@ -16,7 +20,7 @@ app.use(methodOverride('_method'));
 app.engine('ejs', ejsMate); // for boilerplate
 app.use(express.static(path.join(__dirname, "/public"))); // for public folder
 
-
+const dbUrl = process.env.ATLASDB_URL;
 const listingsRouter = require('./routes/listing');
 const reviewsRouter = require('./routes/review');
 const userRouter = require("./routes/user");
@@ -24,6 +28,7 @@ const userRouter = require("./routes/user");
 const { maxHeaderSize } = require('http');
 
 const session = require('express-session');
+const MongoStore = require('connect-mongo').default;
 const flash = require('connect-flash');
 
 const passport = require("passport");
@@ -31,8 +36,20 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: process.env.SECRET,
+    },
+    touchAfter: 24 * 60 * 60 * 1000,
+});
+
+store.on("error", (err) => {
+    console.log("error in Mongo session store", err);
+})
 const sessionOption = {  
-    secret:"mysecretkey",
+    store,
+    secret:process.env.SECRET,
     resave:false,
     saveUninitialized:true,
     cookie:{
@@ -61,34 +78,14 @@ app.use((req, res , next) =>{
     next();
 });
 
-
-
-
-app.get('/hellouser', async (req ,res) =>{
-    const fakeUser = new User({
-        email :"123231vivek@gmail.com",
-        username:"vinay kumar",
-    });
-
-    let RegisteredUser = await User.register(fakeUser,"vivek@123");
-    res.send(RegisteredUser);
-});
-
 main().then(() =>{
     console.log("connected to db");
 })
 .catch(err => console.log(err));
 
 async function main() {
-//   await mongoose.connect('mongodb://127.0.0.1:27017/wonderhub');
-    const dbUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/wonderhub';
-
-    mongoose.connect(dbUrl)
-        .then(() => console.log("DB Connected"))
-        .catch(err => console.log(err));
+    await mongoose.connect(dbUrl)
 }
-
-
 
 app.use('/listing', listingsRouter);
 app.use('/listing/:id/reviews', reviewsRouter);
@@ -103,7 +100,6 @@ app.use((req, res, next) => {
 app.use((err, req ,res,next) =>{
     let {status = 500 , message = "something went wrong"} = err;
     res.status(status).render('error.ejs', {err});
-    // res.status(status).send(message);
 });
 
 const port = process.env.PORT || 8080;

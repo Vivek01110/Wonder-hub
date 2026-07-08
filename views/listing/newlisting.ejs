@@ -3,7 +3,7 @@
 <body>
    <div class="rows">
         <h3 class = "offset-2">Add New Listing</h3>
-        <form class = 'col-8 offset-2 needs-validation'method = "POST" action="/listing" novalidate > 
+        <form class = 'col-8 offset-2 needs-validation' method = "POST" action="/listing" enctype="multipart/form-data" novalidate > 
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" name = "title" placeholder = "Enter the title" class="form-control"  required>
@@ -34,9 +34,10 @@
                 <input type="text" name = "country" placeholder = "Enter the country" class="form-control"  >
                 <div class="invalid-feedback">Country is required.</div>
             </div>
+            
             <div class=" mb-3">
                 <label for="imageURl" class="form-label">Image URL</label>
-                <input type="text" name = "image" placeholder="Enter your image URL" class="form-control" > 
+                <input type="file" name = "image" placeholder="Enter your image URL" class="form-control" required> 
                 <div class="invalid-feedback">Please upload an image.</div>
             </div>
 
